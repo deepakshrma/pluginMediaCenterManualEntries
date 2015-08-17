@@ -60,5 +60,9 @@
                 });
             };
             ContentMedia.delete=function(){};
+
+
+
+
         }]);
 })(window.angular);

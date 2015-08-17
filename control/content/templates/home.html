@@ -80,9 +80,10 @@
         <span>Bulk Actions</span>
     </div>
     <div class="main col-md-9 pull-right">
-        <a class="btn btn-primary" onclick="window.openDialog('importCSV.html', null, 'sm', null)">Import CSV</a>
-        <a class="btn btn-primary margin-left-ten">Export CSV</a>
-        <a class="btn btn-primary margin-left-ten">Get Template</a>
+        <!--<a class="btn btn-primary" onclick="window.openDialog('importCSV.html', null, 'sm', null)">Import CSV</a>-->
+        <import-csv-btn callbacks="ContentHome.importCsvCallbacks" loading="ContentHome.loading"></import-csv-btn>
+        <a class="btn btn-primary margin-left-ten" ng-click="ContentHome.exportCSV()">Export CSV</a>
+        <a class="btn btn-primary margin-left-ten" ng-click="ContentHome.getTemplate()">Get Template</a>
     </div>
 </div>
 <hr class="none">

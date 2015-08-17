@@ -1,6 +1,7 @@
 (function (angular, URL, navigator) {
+    //created peoplePluginContent module
     angular
-        .module('bngCsv', [])
+        .module('bngCsv', ['ui.bootstrap'])
         .provider("$csv", function () {
             var CSVToArray = function (strData, strDelimiter) {
                 // Check to see if the delimiter is defined. If not,
@@ -115,7 +116,7 @@
                             var line = '';
                             for (var index in header) {
                                 if (typeof array[rowNo][index] != 'object') {
-                                    var value = (array[rowNo][index]||"") + "";
+                                    var value = (array[rowNo][index] || "") + "";
                                     line += '"' + value.replace(/"/g, '""') + '",';
                                 }
                                 else {
@@ -150,8 +151,51 @@
                                 document.body.removeChild(link);
                             }
                         }
+                    },
+                    downloadCSVfromNonJSONData: function (data, header, downloadFileName) {
+
+
+                        var csv = this.jsonToCsv(angular.toJson(data), {
+                            header: header
+                        });
+                        this.download(csv, downloadFileName);
+
                     }
                 }
             }
         })
+        .directive('importCsvBtn', ['$modal', function () {
+
+            var directive = {};
+            directive.restrict = 'E';
+            directive.template = '<a class="btn btn-primary">Import CSV</a>';
+            directive.replace = true;
+
+            directive.scope = {
+                loading: "=",
+                callbacks: "="
+            };
+
+            directive.controller = ['$scope', '$window', '$timeout', '$modal', function (that, $window, $timeout, $modal) {
+
+                that.clickFunc = function () {
+
+                    that.loading = true;
+                    var modalInstance = $modal
+                        .open({
+                            templateUrl: 'templates/modals/import-csv.html',
+                            controller: 'ImportCSVPopupCtrl',
+                            controllerAs: 'ImportCSVPopup',
+                            size: 'sm'
+                        });
+
+                    modalInstance.result.then(that.callbacks.success,that.callbacks.error);
+                };
+            }];
+            directive.link = function (that, iElement, iAttrs) {
+                iElement.on('click', that.clickFunc)
+            };
+
+            return directive;
+        }])
 })(window.angular, window.URL, window.navigator);
