@@ -7,8 +7,17 @@
                 /**
                  * Breadcrumbs  related implementation
                  */
-                Buildfire.history.pop();
 
+                Buildfire.history.get({'pluginBreadcrumbsOnly': false},
+                    function (err, data) {
+                        console.log('Data--************************************ Bui1ldfire.history.get get************----------------', data, 'Error-----------------', err);
+                        if (data && data.length) {
+                            data.forEach(function (label) {
+                                if (label && label.options && label.options.elementToShow)
+                                    Buildfire.history.pop();
+                            });
+                        }
+                    });
                 //scroll current view to top when loaded.
                 Buildfire.navigation.scrollTop();
                 var ContentHome = this;
@@ -503,5 +512,7 @@
                         path: PATHS.HOME
                     }
                 });
-            }]);
+            }
+        ])
+    ;
 })(window.angular, undefined);
