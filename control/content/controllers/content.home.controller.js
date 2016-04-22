@@ -4,10 +4,10 @@
         .module('mediaCenterContent')
         .controller('ContentHomeCtrl', ['$scope', 'MediaCenterInfo', 'Modals', 'DB', '$timeout', 'COLLECTIONS', 'Orders', 'AppConfig', 'Messaging', 'EVENTS', 'PATHS', 'Buildfire', '$csv',
             function ($scope, MediaCenterInfo, Modals, DB, $timeout, COLLECTIONS, Orders, AppConfig, Messaging, EVENTS, PATHS, Buildfire, $csv) {
-                /**
+                /*/!**
                  * Breadcrumbs  related implementation
-                 */
-                Buildfire.history.pop();
+                 *!/
+                Buildfire.history.pop();*/
 
                 //scroll current view to top when loaded.
                 Buildfire.navigation.scrollTop();

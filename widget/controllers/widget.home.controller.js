@@ -1,8 +1,8 @@
 (function (angular) {
     angular
         .module('mediaCenterWidget')
-        .controller('WidgetHomeCtrl', ['$scope', '$window', 'DB', 'COLLECTIONS', '$rootScope', 'Buildfire', 'Messaging', 'EVENTS', 'PATHS', 'Location', 'Orders',
-            function ($scope, $window, DB, COLLECTIONS, $rootScope, Buildfire, Messaging, EVENTS, PATHS, Location, Orders) {
+        .controller('WidgetHomeCtrl', ['$scope', '$window', '$location', 'DB', 'COLLECTIONS', '$rootScope', 'Buildfire', 'Messaging', 'EVENTS', 'PATHS', 'Location', 'Orders',
+            function ($scope, $window, $location, DB, COLLECTIONS, $rootScope, Buildfire, Messaging, EVENTS, PATHS, Location, Orders) {
                 $rootScope.showFeed = true;
                 var WidgetHome = this;
                 var _infoData = {
@@ -91,6 +91,7 @@
                  * @param event
                  */
                 Messaging.onReceivedMessage = function (event) {
+                    console.log('$location--------------------Widget section---------------',$location);
                     if (event) {
                         switch (event.name) {
                             case EVENTS.ROUTE_CHANGE:
@@ -108,8 +109,10 @@
 
                                         break;
                                 }
-                                Location.go(url);
-                                if (path==PATHS.MEDIA) {
+                                if(('#'+$location.$$path+'/')!=url){
+                                    Location.go(url);
+                                }
+                                if (path == PATHS.MEDIA) {
                                     $rootScope.showFeed = false;
                                 }
                                 else {
@@ -167,7 +170,7 @@
 
                 // ShowDescription only when it have content
                 WidgetHome.showDescription = function () {
-                    if (WidgetHome.media.data.content.descriptionHTML == '<p>&nbsp;<br></p>' || WidgetHome.media.data.content.descriptionHTML == '<p><br data-mce-bogus="1"></p>'|| WidgetHome.media.data.content.descriptionHTML == '')
+                    if (WidgetHome.media.data.content.descriptionHTML == '<p>&nbsp;<br></p>' || WidgetHome.media.data.content.descriptionHTML == '<p><br data-mce-bogus="1"></p>' || WidgetHome.media.data.content.descriptionHTML == '')
                         return false;
                     else
                         return true;
@@ -261,7 +264,7 @@
                 /**
                  * Implementation of pull down to refresh
                  */
-                var onRefresh=Buildfire.datastore.onRefresh(function(){
+                var onRefresh = Buildfire.datastore.onRefresh(function () {
                     Location.goToHome();
                 });
 

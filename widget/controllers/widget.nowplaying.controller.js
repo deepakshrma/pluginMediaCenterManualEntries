@@ -5,6 +5,7 @@
             function ($scope, $routeParams, media, Buildfire, Modals, COLLECTIONS, $rootScope, $timeout,Location) {
                 $rootScope.blackBackground = true;
                 $rootScope.showFeed = false;
+                Buildfire.history.push('NowPlaying', { elementToShow: 'NowPlaying'});
                 var NowPlaying = this;
                 NowPlaying.swiped=[];
                 NowPlaying.currentTrack = new Track(media.data);

@@ -10,10 +10,10 @@
    */
     .controller('ContentMediaCtrl', ['$scope', '$window', 'Buildfire', 'DB', 'COLLECTIONS', 'Location', 'media', 'Messaging', 'EVENTS', 'PATHS', 'AppConfig', 'Orders',
       function ($scope, $window, Buildfire, DB, COLLECTIONS, Location, media, Messaging, EVENTS, PATHS, AppConfig, Orders) {
-        /**
+       /* /!**
          * Breadcrumbs  related implementation
-         */
-        Buildfire.history.push('Media', {id: 'itemId'});
+         *!/
+        Buildfire.history.push('Media', {id: 'itemId'});*/
         //scroll current view to top when loaded.
         Buildfire.navigation.scrollTop();
         /**

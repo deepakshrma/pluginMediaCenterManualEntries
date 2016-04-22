@@ -4,6 +4,7 @@
         .controller('WidgetMediaCtrl', ['$scope', '$window', 'Messaging', 'Buildfire', 'COLLECTIONS', 'media', 'EVENTS', '$timeout', "$sce", "DB", 'PATHS', '$rootScope','Location',
             function ($scope, $window, Messaging, Buildfire, COLLECTIONS, media, EVENTS, $timeout, $sce, DB, PATHS, $rootScope,Location) {
 
+                Buildfire.history.push('Media', { elementToShow: 'Media'});
                 var WidgetMedia = this;
                 WidgetMedia.API = null;
                 WidgetMedia.showVideo = false;
@@ -110,7 +111,7 @@
 
                                         break
                                 }
-                                Location.go(url);
+                                //Location.go(url);
                                 break;
                         }
                     }

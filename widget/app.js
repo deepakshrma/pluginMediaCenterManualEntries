@@ -155,7 +155,7 @@
                 });
 
 
-            buildfire.navigation.onBackButtonClick = function () {
+           /* buildfire.navigation.onBackButtonClick = function () {
                 var path = $location.path();
                 if (path.indexOf('/media') == 0) {
 
@@ -175,7 +175,31 @@
                     Location.go('#/media/' + path.split('/')[2]);
                 else
                     buildfire.navigation._goBackOne();
-            }
+            };*/
+            buildfire.history.onPop(function(data, err){
+                console.log('buildfire.history.onPop----------------------------',data,'Error------------------',err);
+                var path = $location.path();
+                if (path.indexOf('/media') == 0) {
+                    if ($("#feedView").hasClass('notshowing')) {
+                        Messaging.sendMessageToControl({
+                            name: EVENTS.ROUTE_CHANGE,
+                            message: {
+                                path: PATHS.HOME
+                            }
+                        });
+                        $("#showFeedBtn").click();
+                    }
+                    else
+                        Location.goToHome();
+                }
+                else if (path.indexOf('/nowplaying') == 0)
+                    Location.go('#/media/' + path.split('/')[2]);
+                /*else
+                    buildfire.navigation._goBackOne();
+                buildfire.messaging.sendMessageToControl({});
+                $rootScope.showFeed = true;
+                Location.goTo('#/');*/
+            })
         }]);
 
 })(window.angular, window.buildfire);
