@@ -4,7 +4,20 @@
         .controller('WidgetMediaCtrl', ['$scope', '$window', 'Messaging', 'Buildfire', 'COLLECTIONS', 'media', 'EVENTS', '$timeout', "$sce", "DB", 'PATHS', '$rootScope','Location',
             function ($scope, $window, Messaging, Buildfire, COLLECTIONS, media, EVENTS, $timeout, $sce, DB, PATHS, $rootScope,Location) {
 
-                Buildfire.history.push('Media', { elementToShow: 'Media'});
+                Buildfire.history.get({'pluginBreadcrumbsOnly':false},
+                    function(err,data){
+                        console.log('Data--************************************ Bui1ldfire.history.get get************----------------',data,'Error-----------------',err);
+                        if(data && data.length){
+                            var currentLabel=data[data.length-1];
+                            if(currentLabel && currentLabel.options && (currentLabel.options.elementToShow!='Media')){
+                                Buildfire.history.push('Media', { elementToShow: 'Media'});
+                            }
+                        }
+                        else{
+                            Buildfire.history.push('Media', { elementToShow: 'Media'});
+                        }
+                    });
+
                 var WidgetMedia = this;
                 WidgetMedia.API = null;
                 WidgetMedia.showVideo = false;
