@@ -3,6 +3,10 @@
         .module('mediaCenterWidget')
         .controller('WidgetHomeCtrl', ['$scope', '$window', '$location', 'DB', 'COLLECTIONS', '$rootScope', 'Buildfire', 'Messaging', 'EVENTS', 'PATHS', 'Location', 'Orders',
             function ($scope, $window, $location, DB, COLLECTIONS, $rootScope, Buildfire, Messaging, EVENTS, PATHS, Location, Orders) {
+                /**
+                 * Breadcrumbs  related implementation
+                 */
+                Buildfire.history.pop();
                 $rootScope.showFeed = true;
                 var WidgetHome = this;
                 var _infoData = {
