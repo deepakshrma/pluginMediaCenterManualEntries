@@ -1,8 +1,8 @@
 (function (angular, window) {
     angular
         .module('mediaCenterWidget')
-        .controller('WidgetMediaCtrl', ['$scope', '$window', 'Messaging', 'Buildfire', 'COLLECTIONS', 'media', 'EVENTS', '$timeout', "$sce", "DB", 'PATHS', '$rootScope','Location',
-            function ($scope, $window, Messaging, Buildfire, COLLECTIONS, media, EVENTS, $timeout, $sce, DB, PATHS, $rootScope,Location) {
+        .controller('WidgetMediaCtrl', ['$scope', '$window', 'Messaging', 'Buildfire', 'COLLECTIONS', 'EVENTS', '$timeout', "$sce", "DB", 'PATHS', '$rootScope','Location','ViewStack',
+            function ($scope, $window, Messaging, Buildfire, COLLECTIONS, EVENTS, $timeout, $sce, DB, PATHS, $rootScope,Location,ViewStack) {
 
                 var WidgetMedia = this;
                 WidgetMedia.API = null;
@@ -14,6 +14,10 @@
                     WidgetMedia.API = $API;
                     WidgetMedia.loadingVideo = true;
                 };
+
+
+                var vs = ViewStack.getCurrentView();
+                console.log('viewStack.getCurrentView----------------------',vs);
 
                 WidgetMedia.videoPlayerConfig = {
                     autoHide: false,
@@ -63,8 +67,8 @@
                         videoUrl: ""
                     }
                 };
-                if (media) {
-                    WidgetMedia.item = media;
+                if (vs.media) {
+                    WidgetMedia.item = vs.media;
                     WidgetMedia.changeVideoSrc();
                     WidgetMedia.iframeSrcUrl = $sce.trustAsUrl(WidgetMedia.item.data.srcUrl);
                 }

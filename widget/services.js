@@ -193,5 +193,41 @@
                 return deferred.promise;
             };
             return DB;
-        }]);
+        }])
+        .factory('ViewStack', ['$rootScope', function ($rootScope) {
+            var views = [];
+            var viewMap = {};
+            return {
+                push: function (view) {
+                    console.log('Push in service--------------------',view);
+                    if (viewMap[view.template]) {
+                        this.pop();
+                    }
+                    else {
+                        viewMap[view.template] = 1;
+                        views.push(view);
+                        $rootScope.$broadcast('VIEW_CHANGED', 'PUSH', view);
+                    }
+                    return view;
+                },
+                pop: function () {
+                    $rootScope.$broadcast('BEFORE_POP', views[views.length - 1]);
+                    var view = views.pop();
+                    delete viewMap[view.template];
+                    $rootScope.$broadcast('VIEW_CHANGED', 'POP', view);
+                    return view;
+                },
+                hasViews: function () {
+                    return !!views.length;
+                },
+                getCurrentView: function () {
+                    return views.length && views[views.length - 1] || {};
+                },
+                popAllViews: function () {
+                    $rootScope.$broadcast('VIEW_CHANGED', 'POPALL', views);
+                    views = [];
+                    viewMap = {};
+                }
+            };
+        }])
 })(window.angular, window.buildfire, window.location);

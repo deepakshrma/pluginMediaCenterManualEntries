@@ -1,8 +1,8 @@
 (function (angular) {
     angular
         .module('mediaCenterWidget')
-        .controller('WidgetHomeCtrl', ['$scope', '$window', 'DB', 'COLLECTIONS', '$rootScope', 'Buildfire', 'Messaging', 'EVENTS', 'PATHS', 'Location', 'Orders', '$location',
-            function ($scope, $window, DB, COLLECTIONS, $rootScope, Buildfire, Messaging, EVENTS, PATHS, Location, Orders, $location) {
+        .controller('WidgetHomeCtrl', ['$scope', '$window', 'DB', 'COLLECTIONS', '$rootScope', 'Buildfire', 'Messaging', 'EVENTS', 'PATHS', 'Location', 'Orders', '$location', 'ViewStack',
+            function ($scope, $window, DB, COLLECTIONS, $rootScope, Buildfire, Messaging, EVENTS, PATHS, Location, Orders, $location, ViewStack) {
                 $rootScope.showFeed = true;
                 var WidgetHome = this;
                 var _infoData = {
@@ -90,11 +90,11 @@
                  * Messaging.onReceivedMessage is called when any event is fire from Content/design section.
                  * @param event
                  */
-                Messaging.onReceivedMessage = function (event) {
+                /*Messaging.onReceivedMessage = function (event) {
                     if (event) {
                         switch (event.name) {
                             case EVENTS.ROUTE_CHANGE:
-                                if((event.message && event.message.path == PATHS.MEDIA && $location.$$path.indexOf('/media') == -1) || (event.message && event.message.path != PATHS.MEDIA)) {
+                                if ((event.message && event.message.path == PATHS.MEDIA && $location.$$path.indexOf('/media') == -1) || (event.message && event.message.path != PATHS.MEDIA)) {
                                     var path = event.message.path,
                                         id = event.message.id;
                                     var url = "#/";
@@ -122,7 +122,7 @@
                         }
                     }
                 };
-
+*/
                 var onUpdateCallback = function (event) {
                     if (event.tag == "MediaCenter") {
                         if (event.data) {
@@ -166,7 +166,7 @@
 
                 // ShowDescription only when it have content
                 WidgetHome.showDescription = function () {
-                    if (WidgetHome.media.data.content.descriptionHTML == '<p>&nbsp;<br></p>' || WidgetHome.media.data.content.descriptionHTML == '<p><br data-mce-bogus="1"></p>'|| WidgetHome.media.data.content.descriptionHTML == '')
+                    if (WidgetHome.media.data.content.descriptionHTML == '<p>&nbsp;<br></p>' || WidgetHome.media.data.content.descriptionHTML == '<p><br data-mce-bogus="1"></p>' || WidgetHome.media.data.content.descriptionHTML == '')
                         return false;
                     else
                         return true;
@@ -222,9 +222,17 @@
                     WidgetHome.loadMore();
                 };
 
-                WidgetHome.goToMedia = function (ind) {
-                    $rootScope.showFeed = false;
-                    Location.go('#/media/' + WidgetHome.items[ind].id);
+                WidgetHome.goToMedia = function (index) {
+                    ViewStack.push({
+                        template: WidgetHome.media.data.design.itemLayout,
+                        params: {
+                            controller: "WidgetMediaCtrl as WidgetMedia",
+                            shouldUpdateTemplate : true
+                        },
+                        media: WidgetHome.items[index]
+                    });
+                    /* $rootScope.showFeed = false;
+                     Location.go('#/media/' + WidgetHome.items[ind].id);*/
                 };
 
                 $rootScope.$on("Carousel:LOADED", function () {
@@ -260,7 +268,7 @@
                 /**
                  * Implementation of pull down to refresh
                  */
-                var onRefresh=Buildfire.datastore.onRefresh(function(){
+                var onRefresh = Buildfire.datastore.onRefresh(function () {
                     Location.goToHome();
                 });
 

@@ -50,25 +50,11 @@
 <!--<body class="scrollable customBackground" ng-style="currentBackgroundImage"
       ng-class="blackBackground ? 'blackBackground': ''">-->
 <body class="body-scroll">
-<div class="main_view">
-    <div ng-class="showFeed ? 'showing' : 'notshowing'" data-ng-attr-style="background:url({{ backgroundImage | cropImage:deviceWidth:deviceHeight:true}}) !important; background-size:cover !important;" id="feedView" class="content slide infinite-scroll-parent" >
-        <div ng-controller="WidgetHomeCtrl as WidgetHome">
-            <div ng-include="'templates/home.html'">
-            </div>
-        </div>
+<div ng-controller="WidgetHomeCtrl as WidgetHome" class="slide content infinite-scroll-parent" data-ng-attr-style="background:url({{ backgroundImage | cropImage:deviceWidth:deviceHeight:true}}) !important; background-size:cover !important;">
+    <div ng-if="WidgetHome.media.data.design.listLayout" ng-include="'templates/layouts/' + WidgetHome.media.data.design.listLayout+ '.html'">
     </div>
-    <div data-ng-attr-style="{{
-    backgroundImage
-        ? 'background: url(' + (backgroundImage | cropImage:deviceWidth:deviceHeight:true) + ') !important; background-size: cover;'
-        : 'background: white'
-}}"
-         ng-view=""
-         class="slide content"
-         ng-if="!showFeed"></div>
-
-    <div class="ng-hide" ng-click="showFeed = true;" id="showFeedBtn"></div>
-
 </div>
+<div view-switcher=""></div>
 </body>
 <script>
     function callPlayer(frame_id, func, args) {
