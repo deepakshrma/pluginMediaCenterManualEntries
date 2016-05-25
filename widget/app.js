@@ -66,7 +66,7 @@
             $httpProvider.interceptors.push(interceptor);
 
         }])
-        .run(['Location', '$location', '$rootScope', 'Messaging', 'EVENTS', 'PATHS', function (Location, $location, $rootScope, Messaging, EVENTS, PATHS) {
+        .run(['Location', '$location', '$rootScope', 'Messaging', 'EVENTS', 'PATHS','ViewStack', function (Location, $location, $rootScope, Messaging, EVENTS, PATHS,ViewStack) {
             if (buildfire.deeplink)
                 buildfire.deeplink.getData(function (data) {
                     if (data) {
@@ -74,40 +74,17 @@
                     }
                 });
 
-
             buildfire.navigation.onBackButtonClick = function () {
-                var path = $location.path();
-                if (path.indexOf('/media') == 0) {
-
-                    if ($("#feedView").hasClass('notshowing')) {
-                        Messaging.sendMessageToControl({
-                            name: EVENTS.ROUTE_CHANGE,
-                            message: {
-                                path: PATHS.HOME
-                            }
-                        });
-                        $("#showFeedBtn").click();
-                    }
-                    else
-                        buildfire.navigation._goBackOne();
-                }
-                else if (path.indexOf('/nowplaying') == 0) {
-                    if ($rootScope.playlist) {
-                        $rootScope.playlist = false;
-                        $rootScope.$digest();
-                    }
-                    else {
-                        Location.go('#/media/' + path.split('/')[2]);
-                    }
-                }
-                else
+                if (ViewStack.hasViews()) {
+                    ViewStack.pop();
+                } else {
                     buildfire.navigation._goBackOne();
+                }
             };
-
+            
             buildfire.device.onAppBackgrounded(function () {
                 $rootScope.$emit('deviceLocked', {});
                 //callPlayer('ytPlayer', 'pauseVideo');
             });
         }]);
-
 })(window.angular, window.buildfire);
