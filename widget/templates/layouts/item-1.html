@@ -24,7 +24,7 @@
                 ng-if="WidgetMedia.item.data.audioUrl || WidgetMedia.item.data.videoUrl || WidgetMedia.item.data.srcUrl || WidgetMedia.item.data.links.length">
             <div class="link-list">
                 <a class="text-primary" ng-if="WidgetMedia.item.data.audioUrl"
-                   href="#/nowplaying/{{WidgetMedia.item.id}}">Listen</a>
+                   ng-click="WidgetMedia.openPlayer()">Listen</a>
                 <a class="text-primary" ng-if="WidgetMedia.item.data.videoUrl"
                    ng-click="WidgetMedia.toggleShowVideo();">Watch</a>
                 <!--<a class="text-primary" ng-if="WidgetMedia.item.data.srcUrl" href="{{WidgetMedia.item.data.srcUrl}}"

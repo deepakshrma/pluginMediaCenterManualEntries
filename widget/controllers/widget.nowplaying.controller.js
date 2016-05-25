@@ -1,19 +1,21 @@
 (function (angular) {
     angular
         .module('mediaCenterWidget')
-        .controller('NowPlayingCtrl', ['$scope', '$routeParams', 'media', 'Buildfire', 'Modals', 'COLLECTIONS', '$rootScope', '$timeout', 'Location',
-            function ($scope, $routeParams, media, Buildfire, Modals, COLLECTIONS, $rootScope, $timeout, Location) {
+        .controller('NowPlayingCtrl', ['$scope', 'Buildfire', 'Modals', 'COLLECTIONS', '$rootScope', '$timeout', 'Location', 'ViewStack',
+            function ($scope, Buildfire, Modals, COLLECTIONS, $rootScope, $timeout, Location, ViewStack) {
                 $rootScope.blackBackground = true;
                 $rootScope.showFeed = false;
                 var NowPlaying = this;
-                NowPlaying.currentTime=0;
+                NowPlaying.currentTime = 0;
                 NowPlaying.swiped = [];
-                NowPlaying.currentTrack = new Track(media.data);
-                NowPlaying.item = media;
+                var vs = ViewStack.getCurrentView();
+                console.log('vs in now-playing controller----',vs);
+                NowPlaying.currentTrack = new Track(vs.media.data);
+                NowPlaying.item = vs.media;
                 NowPlaying.playing = false;
                 NowPlaying.paused = false;
                 NowPlaying.showVolume = false;
-                NowPlaying.track = media.data.audioUrl;
+                NowPlaying.track = NowPlaying.currentTrack.url;
                 /**
                  * slider to show the slider on now-playing page.
                  * @type {*|jQuery|HTMLElement}
@@ -62,7 +64,7 @@
                             NowPlaying.playing = false;
                             break;
                         case 'next':
-                            if(e && e.data && e.data.track){
+                            if (e && e.data && e.data.track) {
                                 NowPlaying.currentTrack = e.data.track;
                                 NowPlaying.playing = true;
                             }

@@ -35,6 +35,17 @@
                             type: 'video/' + WidgetMedia.item.data.videoUrl.split('.').pop() //"video/mp4"
                         }];
                 };
+
+                WidgetMedia.openPlayer=function(){
+                    ViewStack.push({
+                        template: 'now-playing',
+                        params: {
+                            controller: "NowPlayingCtrl as NowPlaying",
+                            shouldUpdateTemplate : true
+                        },
+                        media: WidgetMedia.item
+                    });
+                };
                 MediaCenter.get().then(function (data) {
                     WidgetMedia.media = {
                         data: data.data
@@ -98,29 +109,6 @@
                     }
                 };
 
-                Messaging.onReceivedMessage(function (event) {
-                    if (event) {
-                        switch (event.name) {
-                            case EVENTS.ROUTE_CHANGE:
-                                var path = event.message.path,
-                                    id = event.message.id;
-                                var url = "#/";
-                                switch (path) {
-                                    case PATHS.MEDIA:
-                                        url = url + "media";
-                                        if (id) {
-                                            url = url + "/" + id;
-                                        }
-                                        break;
-                                    default :
-
-                                        break
-                                }
-                                Location.go(url);
-                                break;
-                        }
-                    }
-                });
                 WidgetMedia.onUpdateFn = Buildfire.datastore.onUpdate(function (event) {
                     switch (event.tag) {
                         case COLLECTIONS.MediaContent:

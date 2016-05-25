@@ -35,7 +35,7 @@
                 <hr class="small margin-top-zero">
                 <div class="link-list">
                     <a class="text-primary" ng-if="WidgetMedia.item.data.audioUrl"
-                       href="#/nowplaying/{{WidgetMedia.item.id}}">Listen</a>
+                       ng-click="WidgetMedia.openPlayer()">Listen</a>
                     <a class="text-primary" ng-if="WidgetMedia.item.data.videoUrl"
                        ng-click="WidgetMedia.toggleShowVideo();">Watch</a>
                     <a id="sourceToggleButton" class="text-primary" ng-if="WidgetMedia.item.data.srcUrl"

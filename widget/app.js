@@ -28,88 +28,8 @@
             /**
              * To make href urls safe on mobile
              */
-                //$compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension|cdvfile):/);
             $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension|cdvfile|file):/);
-            /**
-             * Disable the pull down refresh
-             */
-                //buildfire.datastore.disableRefresh();
 
-            $routeProvider
-                .when('/', {
-                    template: '<div></div>'
-                })
-                .when('/media/:mediaId', {
-                    templateUrl: 'templates/media.html',
-                    controllerAs: 'WidgetMedia',
-                    controller: 'WidgetMediaCtrl',
-                    resolve: {
-                        media: ['$q', 'DB', 'COLLECTIONS', 'Location', '$route', function ($q, DB, COLLECTIONS, Location, $route) {
-
-                            var deferred = $q.defer();
-                            var MediaContent = new DB(COLLECTIONS.MediaContent);
-                            if ($route.current.params.mediaId) {
-                                MediaContent.getById($route.current.params.mediaId).then(function success(result) {
-                                        if (result && result.data) {
-                                            deferred.resolve(result);
-                                        }
-                                        else {
-                                            Location.goToHome();
-                                        }
-                                    },
-                                    function fail() {
-                                        Location.goToHome();
-                                    }
-                                );
-                            }
-                            else {
-                                Location.goToHome();
-                            }
-                            return deferred.promise;
-                        }]
-                    }
-                })
-                .when('/media', {
-                    templateUrl: 'templates/media.html',
-                    controllerAs: 'WidgetMedia',
-                    controller: 'WidgetMediaCtrl',
-                    resolve: {
-                        media: function () {
-                            return null;
-                        }
-                    }
-                })
-                .when('/nowplaying/:mediaId', {
-                    templateUrl: 'templates/layouts/now-playing.html',
-                    controllerAs: 'NowPlaying',
-                    controller: 'NowPlayingCtrl',
-                    resolve: {
-                        media: ['$q', 'DB', 'COLLECTIONS', 'Location', '$route', function ($q, DB, COLLECTIONS, Location, $route) {
-                            var deferred = $q.defer();
-                            var MediaContent = new DB(COLLECTIONS.MediaContent);
-                            if ($route.current.params.mediaId) {
-                                MediaContent.getById($route.current.params.mediaId).then(function success(result) {
-                                        if (result && result.data) {
-                                            deferred.resolve(result);
-                                        }
-                                        else {
-                                            Location.goToHome();
-                                        }
-                                    },
-                                    function fail() {
-                                        Location.goToHome();
-                                    }
-                                );
-                            }
-                            else {
-                                Location.goToHome();
-                            }
-                            return deferred.promise;
-                        }]
-                    }
-                })
-
-                .otherwise('/');
             var interceptor = ['$q', function ($q) {
                 var counter = 0;
 
