@@ -281,6 +281,8 @@
                     }
                 });
 
+                $rootScope.$on('Media_Info_Updated',e, info);
+
 
             }]);
 })(window.angular);

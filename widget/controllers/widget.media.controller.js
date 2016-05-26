@@ -114,6 +114,7 @@
                     console.log('OnUpdated called in Media controller----------------------------Widget----------',event);
                     switch (event.tag) {
                         case COLLECTIONS.MediaContent:
+                            $rootScope.$broadcast("ITEM_LIST_LAYOUT_CHANGED", WidgetMedia.media.data.design.listLayout, true);
                             if (event.data) {
                                 WidgetMedia.item = event;
                                 $scope.$digest();
@@ -122,7 +123,7 @@
                         case COLLECTIONS.MediaCenter:
                             WidgetMedia.media = event;
                             WidgetMedia.media.data.design.itemLayout = event.data.design.itemLayout;
-                            $rootScope.$broadcast('ITEM_LAYOUT_CHANGED',WidgetMedia.media.data.design.itemLayout);
+                            //$rootScope.$broadcast('ITEM_LAYOUT_CHANGED',WidgetMedia.media.data.design.itemLayout,true);
                             $rootScope.backgroundImage = WidgetMedia.media.data.design.backgroundImage;
                             $scope.$apply();
                             break;
@@ -207,6 +208,8 @@
                 });
 
                 WidgetMedia.listeners['POP'] = $rootScope.$on('BEFORE_POP', function (e, view) {
+
+                    $rootScope.$broadcast('Media_Info_Updated',WidgetMedia.media);
                     console.log("BEFORE_POP called------------:", view.template, 'Media',WidgetMedia.media.data.design.itemLayout);
 
                     if (view.template === WidgetMedia.media.data.design.itemLayout) {
