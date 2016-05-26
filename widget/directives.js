@@ -39,7 +39,13 @@
                                 var parTpl = $compile(_newView)(newScope);
                                 if (view.params && view.params.shouldUpdateTemplate) {
                                     newScope.$on("ITEM_LIST_LAYOUT_CHANGED", function (evt, layout, needDigest) {
-                                        newScope.currentItemListLayout = "templates/" + layout + ".html";
+                                        newScope.currentItemListLayout = "templates/layouts/" + layout + ".html";
+                                        if (needDigest) {
+                                            newScope.$digest();
+                                        }
+                                    });
+                                    newScope.$on("ITEM_LAYOUT_CHANGED", function (evt, layout, needDigest) {
+                                        newScope.currentItemListLayout = "templates/layouts/" + layout + ".html";
                                         if (needDigest) {
                                             newScope.$digest();
                                         }

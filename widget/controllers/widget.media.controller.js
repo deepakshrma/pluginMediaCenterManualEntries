@@ -9,6 +9,7 @@
                 WidgetMedia.showVideo = false;
                 WidgetMedia.showSource = false;
                 WidgetMedia.loadingVideo = false;
+                WidgetMedia.listeners={};
                 var MediaCenter = new DB(COLLECTIONS.MediaCenter);
                 WidgetMedia.onPlayerReady = function ($API) {
                     WidgetMedia.API = $API;
@@ -110,6 +111,7 @@
                 };
 
                 WidgetMedia.onUpdateFn = Buildfire.datastore.onUpdate(function (event) {
+                    console.log('OnUpdated called in Media controller----------------------------Widget----------',event);
                     switch (event.tag) {
                         case COLLECTIONS.MediaContent:
                             if (event.data) {
@@ -120,6 +122,7 @@
                         case COLLECTIONS.MediaCenter:
                             WidgetMedia.media = event;
                             WidgetMedia.media.data.design.itemLayout = event.data.design.itemLayout;
+                            $rootScope.$broadcast('ITEM_LAYOUT_CHANGED',WidgetMedia.media.data.design.itemLayout);
                             $rootScope.backgroundImage = WidgetMedia.media.data.design.backgroundImage;
                             $scope.$apply();
                             break;
@@ -169,9 +172,7 @@
                         WidgetMedia.changeVideoSrc();
                     }
                 });
-                $scope.$on("$destroy", function () {
-                    WidgetMedia.onUpdateFn.clear();
-                });
+
 
                 //Sync with Control section
                 Messaging.sendMessageToControl({
@@ -191,11 +192,26 @@
                 /**
                  * Unbind the onRefresh
                  */
-                $scope.$on('$destroy', function () {
+                $scope.$on("$destroy", function () {
+                    console.log('$scope.$on called on Media Controller---------------------');
                     onRefresh.clear();
                     Buildfire.datastore.onRefresh(function(){
                         Location.goToHome();
                     });
+                    WidgetMedia.onUpdateFn.clear();
+                    for (var i in WidgetMedia.listeners) {
+                        if (WidgetMedia.listeners.hasOwnProperty(i)) {
+                            WidgetMedia.listeners[i]();
+                        }
+                    }
+                });
+
+                WidgetMedia.listeners['POP'] = $rootScope.$on('BEFORE_POP', function (e, view) {
+                    console.log("BEFORE_POP called------------:", view.template, 'Media',WidgetMedia.media.data.design.itemLayout);
+
+                    if (view.template === WidgetMedia.media.data.design.itemLayout) {
+                        $scope.$destroy();
+                    }
                 });
 
                 $rootScope.$on('deviceLocked', function () {

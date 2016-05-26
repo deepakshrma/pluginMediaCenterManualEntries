@@ -126,6 +126,7 @@
                 var onUpdateCallback = function (event) {
                     if (event.tag == "MediaCenter") {
                         if (event.data) {
+                            console.log('OnUpdated called in home controller----------------------------Widget----------',event);
                             WidgetHome.media.data = event.data;
                             $rootScope.backgroundImage = WidgetHome.media.data.design.backgroundImage;
                             console.log(WidgetHome.media);
@@ -270,6 +271,14 @@
                  */
                 var onRefresh = Buildfire.datastore.onRefresh(function () {
                     Location.goToHome();
+                });
+
+
+                $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
+                    console.log('VIEW_CHANGED event called--------in content.home.controller---',type,view);
+                    if (type == 'POP') {
+                        Buildfire.datastore.onUpdate(onUpdateCallback)
+                    }
                 });
 
 
