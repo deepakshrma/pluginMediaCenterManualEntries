@@ -110,7 +110,9 @@
                     }
                 };
 
-                WidgetMedia.onUpdateFn = Buildfire.datastore.onUpdate(function (event) {
+
+
+                var onUpdateCallback =function (event) {
                     console.log('OnUpdated called in Media controller----------------------------Widget----------',event);
                     switch (event.tag) {
                         case COLLECTIONS.MediaContent:
@@ -123,12 +125,17 @@
                         case COLLECTIONS.MediaCenter:
                             WidgetMedia.media = event;
                             WidgetMedia.media.data.design.itemLayout = event.data.design.itemLayout;
-                            //$rootScope.$broadcast('ITEM_LAYOUT_CHANGED',WidgetMedia.media.data.design.itemLayout,true);
+                            $rootScope.$broadcast('ITEM_LAYOUT_CHANGED',WidgetMedia.media.data.design.itemLayout,true);
                             $rootScope.backgroundImage = WidgetMedia.media.data.design.backgroundImage;
                             $scope.$apply();
                             break;
                     }
-                });
+                };
+
+                /**
+                 * Buildfire.datastore.onUpdate method calls when Data is changed.
+                 */
+                var listener = Buildfire.datastore.onUpdate(onUpdateCallback);
 
                 WidgetMedia.toggleShowVideo = function () {
                     WidgetMedia.showVideo = !WidgetMedia.showVideo;
@@ -167,7 +174,7 @@
                 }, function () {
                     if (initializing) {
                         $timeout(function () {
-                            initializing = false;
+                                initializing = false;
                         });
                     } else {
                         WidgetMedia.changeVideoSrc();
@@ -199,7 +206,7 @@
                     Buildfire.datastore.onRefresh(function(){
                         Location.goToHome();
                     });
-                    WidgetMedia.onUpdateFn.clear();
+                    listener.clear();
                     for (var i in WidgetMedia.listeners) {
                         if (WidgetMedia.listeners.hasOwnProperty(i)) {
                             WidgetMedia.listeners[i]();
@@ -208,12 +215,19 @@
                 });
 
                 WidgetMedia.listeners['POP'] = $rootScope.$on('BEFORE_POP', function (e, view) {
-
+                    if(view.template==WidgetMedia.media.data.design.itemLayout)
                     $rootScope.$broadcast('Media_Info_Updated',WidgetMedia.media);
-                    console.log("BEFORE_POP called------------:", view.template, 'Media',WidgetMedia.media.data.design.itemLayout);
+                    console.log("BEFORE_POP called--in Media Controller----------:", view, 'Media',WidgetMedia.media.data.design.itemLayout);
 
-                    if (view.template === WidgetMedia.media.data.design.itemLayout) {
+                    if (WidgetMedia.media && WidgetMedia.media.data && WidgetMedia.media.data.design && (WidgetMedia.media.data.design.itemLayout==view.template)) {
                         $scope.$destroy();
+                    }
+                });
+
+                $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
+                    console.log('VIEW_CHANGED event called--------in content.home.controller---',type,view);
+                    if (type == 'POP') {
+                        Buildfire.datastore.onUpdate(onUpdateCallback)
                     }
                 });
 
@@ -228,6 +242,15 @@
                     // pause Vimeo video (no need to check if there is any vimeo video playing)
                     callVimeoPlayer('ytPlayer');
                 });
+
+                /*$rootScope.$on('Media_Info_Updated',function(e, info){
+                    console.log('Media_Info_Updated recieved in media controller----',info);
+                    if(info){
+                        WidgetMedia.media=info;
+                        //$rootScope.$broadcast('ITEM_LAYOUT_CHANGED',WidgetMedia.media.data.design.itemLayout,true);
+                    }
+                    $scope.$digest();
+                });*/
 
             }]);
 })(window.angular, window);

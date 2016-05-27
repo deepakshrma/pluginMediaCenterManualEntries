@@ -7,12 +7,12 @@
 
 
                         <div class="people-banner" data-ng-hide="WidgetMedia.showVideo"
-                             style="background:url('{{WidgetMedia.item.data.topImage|resizeImage:342:192}}') no-repeat; background-position:center center; background-size:cover !important;height: {{(WidgetMedia.deviceWidth*9)/16+'px'}} !important;">
+                             style="background:url('{{WidgetMedia.item.data.topImage ? (WidgetMedia.item.data.topImage |resizeImage:342:192):false}}') no-repeat; background-position:center center; background-size:cover !important;height: {{(WidgetMedia.deviceWidth*9)/16+'px'}} !important;">
                             <div class="people-bg padding-bottom-fifteen clearfix" style="height: {{(WidgetMedia.deviceWidth*9)/16+'px'}} !important;">
                                 <div class="people-holder clearfix">
                                     <div class="people-media text-center padding-top-fifteen"
                                          data-ng-hide="WidgetMedia.showVideo">
-                                        <img load-image="2x1" style="width: 200px;height: 100px;"
+                                        <img ng-if="WidgetMedia.item.data.topImage" load-image="2x1" style="width: 200px;height: 100px;"
                                              data-final-src="{{WidgetMedia.item.data.topImage|resizeImage:200:100}}">
                                     </div>
                                     <div class="people-info text-center col-xs-12">

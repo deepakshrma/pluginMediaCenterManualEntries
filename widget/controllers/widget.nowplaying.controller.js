@@ -8,6 +8,7 @@
                 var NowPlaying = this;
                 NowPlaying.currentTime = 0;
                 NowPlaying.swiped = [];
+                NowPlaying.listeners={};
                 var vs = ViewStack.getCurrentView();
                 console.log('vs in now-playing controller----',vs);
                 NowPlaying.currentTrack = new Track(vs.media.data);
@@ -287,22 +288,6 @@
                 }
 
 
-                Buildfire.datastore.onUpdate(function (event) {
-                    switch (event.tag) {
-                        case COLLECTIONS.MediaContent:
-                            if (event.data) {
-
-                                NowPlaying.item = event;
-                                $scope.$digest();
-                            }
-                            break;
-                        case COLLECTIONS.MediaCenter:
-                            if (event.data) {
-                                $rootScope.design = event.data.design;
-                            }
-                            break;
-                    }
-                });
 
                 /**
                  * track play pause from playlist
@@ -339,6 +324,30 @@
                 var onRefresh = Buildfire.datastore.onRefresh(function () {
                 });
 
+
+                var onUpdateCallback =function (event) {
+                    console.log('OnUpdated called in NowPlaying controller----------------------------Widget----------',event);
+                    switch (event.tag) {
+                        case COLLECTIONS.MediaContent:
+                            if (event.data) {
+                                NowPlaying.item = event;
+                                $scope.$digest();
+                            }
+                            break;
+                        case COLLECTIONS.MediaCenter:
+                            NowPlaying.media = event;
+                            if(NowPlaying.media.data)
+                            $rootScope.design = event.data.design;
+                            break;
+                    }
+                };
+
+                /**
+                 * Buildfire.datastore.onUpdate method calls when Data is changed.
+                 */
+                var listener = Buildfire.datastore.onUpdate(onUpdateCallback);
+
+
                 /**
                  * Unbind the onRefresh
                  */
@@ -348,7 +357,24 @@
                     Buildfire.datastore.onRefresh(function () {
                         Location.goToHome();
                     });
+                    listener.clear();
+                    for (var i in NowPlaying.listeners) {
+                        if (NowPlaying.listeners.hasOwnProperty(i)) {
+                            NowPlaying.listeners[i]();
+                        }
+                    }
                 });
+
+                NowPlaying.listeners['POP'] = $rootScope.$on('BEFORE_POP', function (e, view) {
+                   /* if(NowPlaying.media)
+                    $rootScope.$broadcast('Media_Info_Updated',NowPlaying.media);
+                    console.log("BEFORE_POP called------------:",view, view.template);*/
+
+                    if (view.template === 'now-playing') {
+                        $scope.$destroy();
+                    }
+                });
+
 
                 /**
                  * Auto play the track

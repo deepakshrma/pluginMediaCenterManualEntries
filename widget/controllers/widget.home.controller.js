@@ -281,7 +281,12 @@
                     }
                 });
 
-                $rootScope.$on('Media_Info_Updated',e, info);
+                $rootScope.$on('Media_Info_Updated',function(e, info){
+                    console.log('Media_Info_Updated recieved in Content home controller----',info);
+                    if(info)
+                        WidgetHome.media=info;
+                    $scope.$digest();
+                });
 
 
             }]);
