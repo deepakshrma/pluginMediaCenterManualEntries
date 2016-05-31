@@ -215,8 +215,16 @@
                 });
 
                 WidgetMedia.listeners['POP'] = $rootScope.$on('BEFORE_POP', function (e, view) {
-                    if(view.template==WidgetMedia.media.data.design.itemLayout)
-                    $rootScope.$broadcast('Media_Info_Updated',WidgetMedia.media);
+                    if(view.template==WidgetMedia.media.data.design.itemLayout){
+                        $rootScope.$broadcast('Media_Info_Updated',WidgetMedia.media);
+                        Messaging.sendMessageToControl({
+                            name: EVENTS.ROUTE_CHANGE,
+                            message: {
+                                path: PATHS.HOME
+                            }
+                        });
+
+                    }
                     console.log("BEFORE_POP called--in Media Controller----------:", view, 'Media',WidgetMedia.media.data.design.itemLayout);
 
                     if (WidgetMedia.media && WidgetMedia.media.data && WidgetMedia.media.data.design && (WidgetMedia.media.data.design.itemLayout==view.template)) {

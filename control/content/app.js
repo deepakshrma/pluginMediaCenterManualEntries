@@ -127,6 +127,7 @@
         .run(['Location', 'Messaging', 'EVENTS', 'PATHS', 'Buildfire', function (Location, Messaging, EVENTS, PATHS, Buildfire) {
             // Handler to receive message from widget
             Messaging.onReceivedMessage = function (event) {
+                console.log(' Messaging.onReceivedMessage content side-----',event);
                 if (event) {
                     switch (event.name) {
                         case EVENTS.ROUTE_CHANGE:

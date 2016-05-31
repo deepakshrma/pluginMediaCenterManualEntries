@@ -90,23 +90,36 @@
                  * Messaging.onReceivedMessage is called when any event is fire from Content/design section.
                  * @param event
                  */
-                /*Messaging.onReceivedMessage = function (event) {
+                Messaging.onReceivedMessage = function (event) {
                     if (event) {
+                        console.log('Widget home Messaging.onReceivedMessage in home controller ---',event);
                         switch (event.name) {
                             case EVENTS.ROUTE_CHANGE:
                                 if ((event.message && event.message.path == PATHS.MEDIA && $location.$$path.indexOf('/media') == -1) || (event.message && event.message.path != PATHS.MEDIA)) {
                                     var path = event.message.path,
                                         id = event.message.id;
-                                    var url = "#/";
                                     switch (path) {
                                         case PATHS.MEDIA:
-                                            url = url + "media/";
-                                            if (id) {
-                                                url = url + id + "/";
-                                            }
+                                            var currentView=ViewStack.getCurrentView();
+                                            console.log('Current View------------------',ViewStack.getCurrentView());
+                                            if(!(currentView.media && currentView.media.id==id))
+                                            MediaContent.getById(id).then(function(data){
+                                                    if(data)
+                                                    ViewStack.push({
+                                                        template: WidgetHome.media.data.design.itemLayout,
+                                                        params: {
+                                                            controller: "WidgetMediaCtrl as WidgetMedia",
+                                                            shouldUpdateTemplate : true
+                                                        },
+                                                        media: data
+                                                    });
+                                                   console.log('MediaContent-------------got----',data);
+                                                },
+                                                function(err){console.error('Error-----------------------------',err);});
                                             break;
+                                        case PATHS.HOME:
+                                            ViewStack.popAllViews();
                                     }
-                                    Location.go(url);
                                     if (path == PATHS.MEDIA) {
                                         $rootScope.showFeed = false;
                                     }
@@ -122,7 +135,6 @@
                         }
                     }
                 };
-*/
                 var onUpdateCallback = function (event) {
                     if (event.tag == "MediaCenter") {
                         if (event.data) {
@@ -277,6 +289,7 @@
                 $rootScope.$on('VIEW_CHANGED', function (e, type, view) {
                     console.log('VIEW_CHANGED event called--------in content.home.controller---',type,view);
                     if (type == 'POP') {
+                        console.log('ONPOP in Content.home.controller-------------------');
                         Buildfire.datastore.onUpdate(onUpdateCallback)
                     }
                 });
